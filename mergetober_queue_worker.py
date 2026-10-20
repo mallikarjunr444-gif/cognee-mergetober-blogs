@@ -176,12 +176,13 @@ def get_current_prs():
     ]
     res = subprocess.run(cmd, capture_output=True, text=True)
     if res.returncode != 0:
-        logger.error("Failed to fetch PRs: %s", res.stderr)
-        return []
+        logger.error("Failed to fetch PRs (network error or gh CLI error): %s", res.stderr.strip())
+        return None
     try:
         return json.loads(res.stdout)
-    except Exception:
-        return []
+    except Exception as e:
+        logger.error("Failed to parse PR JSON: %s", e)
+        return None
 
 
 def build_pr_body(item):
@@ -243,6 +244,9 @@ def submit_next_pr(item):
 def run_cycle():
     state = load_state()
     prs = get_current_prs()
+    if prs is None:
+        logger.warning("Could not fetch current PRs (network error or GitHub API unavailable). Skipping cycle to preserve strict 5 PR limit.")
+        return
 
     open_prs = [p for p in prs if p["state"] == "OPEN"]
     merged_prs = [p for p in prs if p["state"] == "MERGED"]
