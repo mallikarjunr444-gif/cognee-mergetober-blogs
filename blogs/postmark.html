@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giving AI Agents Transactional Email Memory: Building a Postmark Connector for Cognee | Mergetober 2026</title>
+  <meta name="description" content="Open Source Cognee Integration for Mergetober 2026 by Mallikarjun R">
+  <meta name="author" content="Mallikarjun R (@mallikarjunr444-gif)">
+  <style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --primary: #58a6ff;
+  --accent: #a371f7;
+  --code-bg: #090d13;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  padding: 0 16px 60px 16px;
+}
+header {
+  max-width: 860px;
+  margin: 30px auto 40px auto;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+header a:hover { text-decoration: underline; }
+.badge {
+  display: inline-block;
+  background: rgba(163, 113, 247, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(163, 113, 247, 0.4);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+.article-container {
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+}
+.author-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 32px 0;
+  padding: 16px;
+  background: var(--code-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.author-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+}
+.author-info h4 { margin: 0; font-size: 1.05rem; color: var(--text); }
+.author-info p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+.content h1 { font-size: 2.2rem; margin-bottom: 16px; line-height: 1.25; color: #fff; }
+.content h2 { font-size: 1.5rem; margin-top: 32px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: #fff; }
+.content h3 { font-size: 1.2rem; margin-top: 24px; margin-bottom: 8px; color: var(--primary); }
+.content p { margin-bottom: 16px; color: var(--text); }
+.content ul, .content ol { margin-left: 24px; margin-bottom: 16px; }
+.content li { margin-bottom: 6px; }
+.content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 20px 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  color: #79c0ff;
+}
+.content code {
+  background: rgba(110, 118, 129, 0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  font-family: monospace;
+}
+.content pre code { background: none; padding: 0; }
+.content blockquote {
+  border-left: 4px solid var(--primary);
+  padding-left: 16px;
+  color: var(--text-muted);
+  margin: 20px 0;
+}
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+}
+.content th, .content td {
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: left;
+}
+.content th { background: var(--code-bg); color: #fff; }
+.content hr { border: 0; height: 1px; background: var(--border); margin: 30px 0; }
+.links-box {
+  margin-top: 36px;
+  padding: 20px;
+  background: var(--code-bg);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
+.links-box a { color: var(--primary); font-weight: 600; text-decoration: none; }
+.links-box a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <a href="../index.html">← Back to Mergetober Hub</a>
+    </div>
+    <div>
+      <span class="badge">Mergetober 2026 · Cognee</span>
+    </div>
+  </header>
+  <main class="article-container">
+    <div class="author-card">
+      <img src="https://avatars.githubusercontent.com/u/237906152?v=4" alt="Mallikarjun R" class="author-avatar"/>
+      <div class="author-info">
+        <h4>Mallikarjun R (<a href="https://github.com/mallikarjunr444-gif" target="_blank" rel="noopener">@mallikarjunr444-gif</a>)</h4>
+        <p>CSE Student &amp; Open Source Contributor · Bangalore, India</p>
+      </div>
+    </div>
+    <article class="content">
+      <h1>Giving AI Agents Transactional Email Memory: Building a Postmark Connector for Cognee</h1>
+<p>Postmark (by ActiveCampaign) is the backbone of transactional messaging for modern software products. Transactional emails contain vital product notifications: invoices, security verification alerts, subscription confirmations, and receipts.</p>
+<p>During Mergetober, I built the <strong>Postmark Data-Source Connector</strong> for <a href="https://github.com/topoteretes/cognee" target="_blank" rel="noopener">Cognee</a> to give AI agents access to transactional email templates and delivery logs.</p>
+<hr/>
+<h2>Features</h2>
+<ul>
+<li><strong>Template Ingestion</strong>: Extracts template names, aliases, layouts, subjects, and text/HTML bodies.</li>
+<li><strong>Document Mode (<code>DOCUMENT_SOURCE_ATTR = "postmark"</code>)</strong>: Bypasses flat row indexing and passes templates directly to Cognee's cognify engine to construct an entity knowledge graph.</li>
+<li><strong>Forget-on-Delete</strong>: Syncs with <code>write_disposition="replace"</code>, automatically pruning removed templates via Cognee's <code>orphan_cleanup</code>.</li>
+</ul>
+<hr/>
+<h2>Example Usage</h2>
+    </article>
+    <div class="links-box">
+      <p><strong>🔗 Submission Links:</strong></p>
+      <p>• GitHub Pull Request: <a href="https://github.com/topoteretes/cognee-community/pull/440" target="_blank" rel="noopener">https://github.com/topoteretes/cognee-community/pull/440</a></p>
+      <p>• GitHub Issue: <a href="https://github.com/topoteretes/cognee/issues/6090" target="_blank" rel="noopener">https://github.com/topoteretes/cognee/issues/6090</a></p>
+      <p>• Built for: <a href="https://www.wemakedevs.org/hackathons/mergetober" target="_blank" rel="noopener">WeMakeDevs Mergetober Hackathon</a></p>
+    </div>
+  </main>
+</body>
+</html>
