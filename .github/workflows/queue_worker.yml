@@ -1,0 +1,41 @@
+name: Autonomous Mergetober PR Queue Worker
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check-and-submit:
+    name: Check PRs and Auto-Submit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Queue Worker
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          STATE_FILE: queue_state.json
+          LOG_FILE: queue_worker.log
+        run: |
+          python mergetober_queue_worker.py
+
+      - name: Commit Updated State
+        run: |
+          git config user.name "Mallikarjun R"
+          git config user.email "mallikarjunr444@gmail.com"
+          git add queue_state.json queue_worker.log || true
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(queue): update PR queue state [skip ci]"
+            git push origin main
+          fi
