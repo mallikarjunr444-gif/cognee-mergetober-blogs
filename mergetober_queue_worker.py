@@ -129,6 +129,16 @@ QUEUE = [
         "tests": "3/3 tests passing, Ruff clean",
     },
     {
+        "id": "jotform",
+        "repo": "topoteretes/cognee-community",
+        "branch": "feature/jotform-connector",
+        "title": "feat(connector): add Jotform data-source connector for forms and submissions",
+        "issue": "topoteretes/cognee#5968",
+        "blog_url": "https://mallikarjunr444-gif.github.io/cognee-mergetober-blogs/blogs/jotform.html",
+        "summary": "Adds production-ready community data-source connector for Jotform form schemas and submissions.",
+        "tests": "4/4 tests passing, Ruff clean",
+    },
+    {
         "id": "core_delete_guard",
         "repo": "topoteretes/cognee",
         "branch": "fix/bypass-embedding-guard-on-delete",
