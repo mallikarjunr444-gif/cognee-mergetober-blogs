@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingesting the Real-Time Web: Building an RSS & Atom Feeds Connector for Cognee | Mergetober 2026</title>
+  <meta name="description" content="Open Source Cognee Integration for Mergetober 2026 by Mallikarjun R">
+  <meta name="author" content="Mallikarjun R (@mallikarjunr444-gif)">
+  <style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --primary: #58a6ff;
+  --accent: #ff6100;
+  --code-bg: #090d13;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  padding: 0 16px 60px 16px;
+}
+header {
+  max-width: 860px;
+  margin: 30px auto 40px auto;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+header a:hover { text-decoration: underline; }
+.badge {
+  display: inline-block;
+  background: rgba(255, 97, 0, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(255, 97, 0, 0.4);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+.article-container {
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+}
+h1 {
+  font-size: 2.2rem;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+.meta {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+h2 {
+  font-size: 1.5rem;
+  margin-top: 36px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  color: #f0f6fc;
+}
+h3 {
+  font-size: 1.2rem;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #f0f6fc;
+}
+p { margin-bottom: 16px; }
+ul, ol {
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+li { margin-bottom: 8px; }
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(110, 118, 129, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre code {
+  background: transparent;
+  padding: 0;
+}
+.callout {
+  border-left: 4px solid var(--primary);
+  background: rgba(88, 166, 255, 0.08);
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+}
+footer {
+  max-width: 860px;
+  margin: 40px auto 0 auto;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html">← Back to Mergetober Portfolio</a>
+    <span class="badge">Official Integration</span>
+  </header>
+
+  <article class="article-container">
+    <h1>Ingesting the Real-Time Web: Building an RSS & Atom Feeds Connector for Cognee</h1>
+    <div class="meta">
+      <span>By <strong>Mallikarjun R</strong></span>
+      <span>Published: October 2026</span>
+      <span>Hackathon: <strong>Mergetober 2026</strong></span>
+      <span>Issue: <strong>#4804</strong></span>
+    </div>
+
+    <p>Data feeds powered by RSS and Atom are the quiet backbone of the decentralized internet. Every technical publication, engineering changelog, research laboratory, and newsletter distributes updates using these open protocols. By bringing native RSS and Atom ingestion into <a href="https://github.com/topoteretes/cognee" style="color: var(--primary);">Cognee</a>, AI agents can continuously learn from the entire open web in real time.</p>
+
+    <h2>Why RSS Matters for Cognitive Graphs</h2>
+    <p>Most AI agents suffer from information cutoff: their world knowledge freezes the day training finishes. While scraping arbitrary HTML pages is brittle and prone to breakage, syndication feeds offer structured, canonical streams containing article titles, clean author attribution, timestamps, and full HTML or plain-text summaries.</p>
+
+    <div class="callout">
+      <strong>Key Benefit:</strong> One connector covers thousands of content providers — Hacker News, Substack, ArXiv, GitHub releases, WordPress blogs, and corporate engineering publications — without requiring API keys or rate-limit gatekeeping.
+    </div>
+
+    <h2>Architecture and Design</h2>
+    <p>The connector sits under <code>packages/connector/rss/</code> and leverages Python's built-in <code>xml.etree.ElementTree</code> for high-performance, dependency-free XML parsing.</p>
+
+    <ul>
+      <li><strong>Dual Protocol Handling:</strong> Normalizes RSS 2.0 (<code>&lt;item&gt;</code>) and Atom 1.0 (<code>&lt;entry&gt;</code>) into uniform Cognee memory entities.</li>
+      <li><strong>Document Mode Extraction:</strong> Tags every row with <code>DOCUMENT_SOURCE_ATTR = "rss"</code>, directing article content directly into Cognee's cognitive graph pipeline for entity extraction and semantic indexing.</li>
+      <li><strong>Incremental Synchronization:</strong> Evaluates publication timestamps against an optional <code>since</code> parameter to ingest only net-new articles.</li>
+      <li><strong>Forget-on-Delete Lifecycle:</strong> Runs with <code>write_disposition="replace"</code> so pruned feed entries automatically trigger graph cleanup.</li>
+    </ul>
+
+    <h2>Quickstart Example</h2>
+    <pre><code>import asyncio
+import cognee
+from cognee_community_connector_rss import rss_source
+
+async def main():
+    # Ingest multiple syndication streams
+    feeds = [
+        "https://news.ycombinator.com/rss",
+        "https://blog.langchain.dev/rss/",
+    ]
+    
+    source = rss_source(feed_urls=feeds, max_entries_per_feed=25)
+    
+    await cognee.remember(
+        source,
+        dataset_name="tech_intelligence",
+        primary_key="id",
+        write_disposition="replace",
+    )
+    
+    # Query your freshly updated graph memory!
+    insights = await cognee.search("What are the latest breakthroughs in AI agents?")
+    print(insights)
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+
+    <h2>Verification & Quality Assurance</h2>
+    <p>The connector comes complete with an end-to-end pytest suite using mocked XML payloads to ensure zero network flakiness in CI pipelines, full DCO compliance, and strict Ruff formatting.</p>
+  </article>
+
+  <footer>
+    <p>Part of the Mergetober 2026 Open Source Initiative by Mallikarjun R (@mallikarjunr444-gif).</p>
+  </footer>
+</body>
+</html>

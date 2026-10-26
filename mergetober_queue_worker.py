@@ -139,6 +139,16 @@ QUEUE = [
         "tests": "4/4 tests passing, Ruff clean",
     },
     {
+        "id": "rss",
+        "repo": "topoteretes/cognee-community",
+        "branch": "feature/rss-connector",
+        "title": "feat(connector): add RSS and Atom feeds data-source connector (cognee#4804)",
+        "issue": "topoteretes/cognee#4804",
+        "blog_url": "https://mallikarjunr444-gif.github.io/cognee-mergetober-blogs/blogs/rss.html",
+        "summary": "Adds production-ready community data-source connector for RSS and Atom syndication feeds.",
+        "tests": "4/4 tests passing, Ruff clean",
+    },
+    {
         "id": "core_delete_guard",
         "repo": "topoteretes/cognee",
         "branch": "fix/bypass-embedding-guard-on-delete",
